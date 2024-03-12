@@ -14,7 +14,7 @@ pipeline {
         ansiColor('xterm')
     }
     parameters {
-        string(name: 'version', defaultValue: '', description: 'what is artifact version?')
+        string(name: 'version', defaultValue: '1.0.0', description: 'what is artifact version?')
         string(name: 'environment', defaultValue: 'dev', description: 'what is environment?')
     }
 
@@ -32,7 +32,7 @@ pipeline {
         stage('Init') {
             steps {
                 sh """
-                    cd terrform
+                    cd terraform
                     terraform init --backend-config=${params.environment}/backend.tf -reconfigure
                 """
 
@@ -41,7 +41,7 @@ pipeline {
         stage('Plan') {
             steps {
                 sh """
-                    cd terrform
+                    cd terraform
                     terraform plan -var.file=${params.environment}/${params.environment}.tfvars -var="app_version=${params.version}"
                 """
 
