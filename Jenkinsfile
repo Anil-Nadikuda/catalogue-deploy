@@ -9,7 +9,7 @@ pipeline {
     //     nexusURL = '172.31.14.12:8081'
     // }
     parameters {
-        string(name: 'version', defaultValue: '1.0.0', description: 'what is artifact version?')
+        string(name: 'version', defaultValue: '', description: 'what is artifact version?')
         string(name: 'environment', defaultValue: 'dev', description: 'what is environment?')
     }
 
