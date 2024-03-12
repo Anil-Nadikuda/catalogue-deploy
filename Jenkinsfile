@@ -8,17 +8,41 @@ pipeline {
     //     packageVersion = ''
     //     nexusURL = '172.31.14.12:8081'
     // }
+    options {
+        timeout(time: 1, unit: 'HOURS')
+        disableConcurrentBuilds()
+        ansiColor('xterm')
+    }
     parameters {
         string(name: 'version', defaultValue: '', description: 'what is artifact version?')
         string(name: 'environment', defaultValue: 'dev', description: 'what is environment?')
     }
 
     stages {
-        
-        stage('Print version') {
+
+         stage('Print version') {
             steps {
                 sh """
-                    echo "version:${params.version}"
+                    echo "version: ${params.version}"
+                    echo "environment: ${params.environment}"
+                """
+            }
+        }
+        
+        stage('Init') {
+            steps {
+                sh """
+                    cd terrform
+                    terraform init --backend-config=${params.environment}/backend.tf -reconfigure
+                """
+
+            }
+        }
+        stage('Plan') {
+            steps {
+                sh """
+                    cd terrform
+                    terraform plan -var.file=${params.environment}/${params.environment}.tfvars -var="app_version=${params.version}"
                 """
 
             }
