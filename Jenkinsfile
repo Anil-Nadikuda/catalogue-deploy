@@ -4,10 +4,10 @@ pipeline {
             label 'AGENT-1'
         }
     }
-    // environment {
-    //     packageVersion = ''
-    //     nexusURL = '172.31.14.12:8081'
-    // }
+    environment {
+        packageVersion = ''
+        nexusURL = '172.31.83.22:8081'
+    }
     options {
         timeout(time: 1, unit: 'HOURS')
         disableConcurrentBuilds()
@@ -43,6 +43,15 @@ pipeline {
                 sh """
                     cd terraform
                     terraform plan -var-file=${params.environment}/${params.environment}.tfvars -var="app_version=${params.version}"
+                """
+
+            }
+        }
+        stage('Apply') {
+            steps {
+                sh """
+                    cd terraform
+                    terraform apply -var-file=${params.environment}/${params.environment}.tfvars -var="app_version=${params.version}" -auto-approve
                 """
 
             }
