@@ -1,5 +1,5 @@
 module "catalogue" {
-  source = "https://github.com/Anil-Nadikuda/terraform-roboshop-app.git"
+  source = "git::https://github.com/Anil-Nadikuda/terraform-roboshop-app.git"
   vpc_id = data.aws_ssm_parameter.vpc_id.value
   component_sg_id = data.aws_ssm_parameter.user_sg_id.value
   private_subnet_ids = split(",", data.aws_ssm_parameter.private_subnet_ids.value) #list of private subnte_ids
