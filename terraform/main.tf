@@ -1,4 +1,4 @@
-module "user" {
+module "catalogue" {
   source = "https://github.com/Anil-Nadikuda/terraform-roboshop-app.git"
   vpc_id = data.aws_ssm_parameter.vpc_id.value
   component_sg_id = data.aws_ssm_parameter.user_sg_id.value
