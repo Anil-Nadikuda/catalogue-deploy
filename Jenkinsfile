@@ -42,6 +42,11 @@ pipeline {
             }
         }
         stage('Plan') {
+            when{
+                expression{
+                    params.Create
+                }
+            }
             steps {
                 sh """
                     cd terraform
@@ -51,11 +56,6 @@ pipeline {
             }
         }
         stage('Apply') {
-            when{
-                expression{
-                    params.Create
-                }
-            }
             steps {
                 sh """
                     cd terraform
