@@ -16,6 +16,8 @@ pipeline {
     parameters {
         string(name: 'version', defaultValue: '1.0.0', description: 'what is artifact version?')
         string(name: 'environment', defaultValue: 'dev', description: 'what is environment?')
+        booleanParam(name: 'Destroy', defaultValue: 'false', description: 'what to destroy?')
+
     }
 
     stages {
@@ -38,24 +40,38 @@ pipeline {
 
             }
         }
-        // stage('Plan') {
-        //     steps {
-        //         sh """
-        //             cd terraform
-        //             terraform plan -var-file=${params.environment}/${params.environment}.tfvars -var="app_version=${params.version}"
-        //         """
+        stage('Plan') {
+            steps {
+                sh """
+                    cd terraform
+                    terraform plan -var-file=${params.environment}/${params.environment}.tfvars -var="app_version=${params.version}"
+                """
 
-        //     }
-        // }
+            }
+        }
         stage('Apply') {
             steps {
                 sh """
                     cd terraform
-                    terraform destroy -var-file=${params.environment}/${params.environment}.tfvars -var="app_version=${params.version}" -auto-approve
+                    terraform apply -var-file=${params.environment}/${params.environment}.tfvars -var="app_version=${params.version}" -auto-approve
                     
                 """
                 // terraform apply -var-file=${params.environment}/${params.environment}.tfvars -var="app_version=${params.version}" -auto-approve
                 // replace with destroy
+            }
+        }
+        stage('Destroy') {
+            when{
+                expression{
+                    params.Destroy
+                }
+            }
+            steps {
+                sh """
+                    cd terraform
+                    terraform plan -var-file=${params.environment}/${params.environment}.tfvars -var="app_version=${params.version}"
+                """
+
             }
         }
     }
